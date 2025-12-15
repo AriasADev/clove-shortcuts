@@ -1,24 +1,24 @@
-import {
-    ApplicationCommandType,
-    ChatInputCommandInteraction,
-    SlashCommandBuilder,
-    ContextMenuCommandBuilder,
-    UserContextMenuCommandInteraction,
-    MessageContextMenuCommandInteraction
+import { 
+  ApplicationCommandType,
+  ChatInputCommandInteraction, 
+  SlashCommandBuilder,
+  ContextMenuCommandBuilder,
+  UserContextMenuCommandInteraction,
+  MessageContextMenuCommandInteraction
 } from 'discord.js';
 import { SlashCommand, UserContextMenuCommand, MessageContextMenuCommand } from '../types/Command';
 
-const ADB_MESSAGE = 'Starting December 5, 2025, the active developer badge has been **removed**, and is **no longer** obtainable. There are also *no* plans for a new badge replacing this.';
+const PLURALITY_MESSAGE = 'Plurality (or multiplicity) is the existence of multiple self-aware entities inside one physical brain.\nYou can find some simple information [here](<https://morethanone.info>)\nand some more advanced info [here](<https://pluralpedia.org/w/Main_Page>)'
 
-// Slash command: /adb [user]
+// Slash command: /plurality [user]
 export const slashCommand: SlashCommand = {
     data: new SlashCommandBuilder()
-        .setName('adb')
-        .setDescription('Info about the Active Developer Badge')
-        .addUserOption(option =>
+        .setName('plurality')
+        .setDescription('Send information about plurality')
+        .addUserOption(option => 
             option
                 .setName('user')
-                .setDescription('User to inform about the badge')
+                .setDescription('User to ping')
                 .setRequired(false)
         ),
 
@@ -26,34 +26,34 @@ export const slashCommand: SlashCommand = {
         const targetUser = interaction.options.getUser('user');
 
         if (targetUser) {
-            await interaction.reply(`Hey there, ${targetUser}! ${ADB_MESSAGE}`);
+            await interaction.reply(`Hey there ${targetUser}! ${PLURALITY_MESSAGE}`);
         } else {
-            await interaction.reply(ADB_MESSAGE);
+            await interaction.reply(PLURALITY_MESSAGE);
         }
-    }
+    } 
 };
 
-// User context menu: Right-click user → Apps → DevBadge
+// User context menu: Right-click user → Apps → Plurality
 export const userContextCommand: UserContextMenuCommand = {
     data: new ContextMenuCommandBuilder()
-        .setName('DevBadge')
+        .setName('Plurality')
         .setType(ApplicationCommandType.User),
 
     async execute(interaction: UserContextMenuCommandInteraction) {
         const targetUser = interaction.targetUser;
-        await interaction.reply(`Hey there, ${targetUser}! ${ADB_MESSAGE}`);
+        await interaction.reply(`Hey there, ${targetUser}! ${PLURALITY_MESSAGE}`);
     }
 };
 
-// Message context menu: Right-click message → Apps → DevBadge
+// Message context menu: Right-click message → Apps → Plurality
 export const messageContextCommand: MessageContextMenuCommand = {
     data: new ContextMenuCommandBuilder()
-        .setName('DevBadge')
+        .setName('Plurality')
         .setType(ApplicationCommandType.Message),
 
     async execute(interaction: MessageContextMenuCommandInteraction) {
         const targetUser = interaction.targetMessage.author;
-        await interaction.reply(`Hey there, ${targetUser}! ${ADB_MESSAGE}`);
+        await interaction.reply(`Hey there, ${targetUser}! ${PLURALITY_MESSAGE}`);
     }
 };
 

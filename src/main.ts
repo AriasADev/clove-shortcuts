@@ -7,18 +7,18 @@ dotenv.config();
 
 // Create a new client instance with minimal intents for user-installed bot
 const client = new Client({
-  intents: [
-    GatewayIntentBits.Guilds,
-  ]
+    intents: [
+        GatewayIntentBits.Guilds,
+    ]
 });
 
 // Load all events
 loadEvents(client).then(() => {
-  console.log('All events loaded');
+    console.log('All events loaded');
 });
 
 // Login to Discord
 client.login(process.env.DISCORD_TOKEN).catch(error => {
-  console.error('Failed to login:', error);
-  process.exit(1);
+    console.error('Failed to login:', error);
+    process.exit(1);
 });

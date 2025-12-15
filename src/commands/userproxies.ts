@@ -1,24 +1,24 @@
-import {
-    ApplicationCommandType,
-    ChatInputCommandInteraction,
-    SlashCommandBuilder,
-    ContextMenuCommandBuilder,
-    UserContextMenuCommandInteraction,
-    MessageContextMenuCommandInteraction
+import { 
+  ApplicationCommandType,
+  ChatInputCommandInteraction, 
+  SlashCommandBuilder,
+  ContextMenuCommandBuilder,
+  UserContextMenuCommandInteraction,
+  MessageContextMenuCommandInteraction
 } from 'discord.js';
 import { SlashCommand, UserContextMenuCommand, MessageContextMenuCommand } from '../types/Command';
 
-const ADB_MESSAGE = 'Starting December 5, 2025, the active developer badge has been **removed**, and is **no longer** obtainable. There are also *no* plans for a new badge replacing this.';
+const USERPROXY_MESSAGE = 'You can setup a Userproxy using this guide <https://youtu.be/spRkTssPCqg>!'
 
-// Slash command: /adb [user]
+// Slash command: /userproxies [user]
 export const slashCommand: SlashCommand = {
     data: new SlashCommandBuilder()
-        .setName('adb')
-        .setDescription('Info about the Active Developer Badge')
-        .addUserOption(option =>
+        .setName('userproxies')
+        .setDescription('Send the tutorial on how to setup a userproxy')
+        .addUserOption(option => 
             option
                 .setName('user')
-                .setDescription('User to inform about the badge')
+                .setDescription('User to ping')
                 .setRequired(false)
         ),
 
@@ -26,34 +26,34 @@ export const slashCommand: SlashCommand = {
         const targetUser = interaction.options.getUser('user');
 
         if (targetUser) {
-            await interaction.reply(`Hey there, ${targetUser}! ${ADB_MESSAGE}`);
+            await interaction.reply(`Hey there ${targetUser}! ${USERPROXY_MESSAGE}`);
         } else {
-            await interaction.reply(ADB_MESSAGE);
+            await interaction.reply(USERPROXY_MESSAGE);
         }
-    }
+    } 
 };
 
-// User context menu: Right-click user → Apps → DevBadge
+// User context menu: Right-click user → Apps → Userproxies
 export const userContextCommand: UserContextMenuCommand = {
     data: new ContextMenuCommandBuilder()
-        .setName('DevBadge')
+        .setName('Userproxies')
         .setType(ApplicationCommandType.User),
 
     async execute(interaction: UserContextMenuCommandInteraction) {
         const targetUser = interaction.targetUser;
-        await interaction.reply(`Hey there, ${targetUser}! ${ADB_MESSAGE}`);
+        await interaction.reply(`Hey there, ${targetUser}! ${USERPROXY_MESSAGE}`);
     }
 };
 
-// Message context menu: Right-click message → Apps → DevBadge
+// Message context menu: Right-click message → Apps → Userproxies
 export const messageContextCommand: MessageContextMenuCommand = {
     data: new ContextMenuCommandBuilder()
-        .setName('DevBadge')
+        .setName('Userproxies')
         .setType(ApplicationCommandType.Message),
 
     async execute(interaction: MessageContextMenuCommandInteraction) {
         const targetUser = interaction.targetMessage.author;
-        await interaction.reply(`Hey there, ${targetUser}! ${ADB_MESSAGE}`);
+        await interaction.reply(`Hey there, ${targetUser}! ${USERPROXY_MESSAGE}`);
     }
 };
 
