@@ -61,7 +61,8 @@ const categories: CommandCategory[] = [
         emoji: '🎉',
         commands: [
             { name: '/cheese', description: 'Send the cheese GIF' },
-            { name: '/crazy', description: 'I was crazy once...' }
+            { name: '/crazy', description: 'I was crazy once...' },
+            { name: '/gayzy', description: 'I was gay once...'}
         ]
     }
 ];
