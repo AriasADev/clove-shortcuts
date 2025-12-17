@@ -62,7 +62,8 @@ const categories: CommandCategory[] = [
         commands: [
             { name: '/cheese', description: 'Send the cheese GIF' },
             { name: '/crazy', description: 'I was crazy once...' },
-            { name: '/gayzy', description: 'I was gay once...'}
+            { name: '/gayzy', description: 'I was gay once...'},
+            { name: '/tone', description: 'Lower someones tone'}
         ]
     }
 ];
