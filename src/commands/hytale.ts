@@ -22,7 +22,7 @@ export const slashCommand: SlashCommand = {
         const targetUser = interaction.options.getUser('user');
 
         if (targetUser) {
-            await interaction.reply(`You know what ${targetUser}...\n${HYTALE_MESSAGE}`);
+            await interaction.reply(`Hey there ${targetUser}, here is more on Hytale\n${HYTALE_MESSAGE}`);
         } else {
             await interaction.reply(HYTALE_MESSAGE);
         }
