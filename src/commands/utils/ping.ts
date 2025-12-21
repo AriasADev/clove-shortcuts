@@ -10,13 +10,11 @@ export default {
         .setDescription('Check the bot\'s latency'),
 
     async execute(interaction: ChatInputCommandInteraction) {
-        const sent = await interaction.reply({ 
-            content: 'Pinging...', 
-            fetchReply: true,
-            flags: MessageFlags.Ephemeral
-        });
-        const latency = sent.createdTimestamp - interaction.createdTimestamp;
+        await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+        
+        const start = Date.now();
         const apiLatency = Math.round(interaction.client.ws.ping);
+        const latency = Date.now() - start;
 
         await interaction.editReply(
             `🏓 Pong!\n` +
