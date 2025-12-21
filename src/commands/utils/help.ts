@@ -7,7 +7,7 @@ import {
     StringSelectMenuInteraction,
     ComponentType
 } from 'discord.js';
-import { SlashCommand } from '../types/Command';
+import { SlashCommand } from '../../types/Command';
 
 interface CommandCategory {
     id: string;

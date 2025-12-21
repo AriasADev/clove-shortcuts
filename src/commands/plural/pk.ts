@@ -6,19 +6,20 @@ import {
     UserContextMenuCommandInteraction,
     MessageContextMenuCommandInteraction
 } from 'discord.js';
-import { SlashCommand, UserContextMenuCommand, MessageContextMenuCommand } from '../types/Command';
+import { SlashCommand, UserContextMenuCommand, MessageContextMenuCommand } from '../../types/Command';
 
-const TONE_GIF = 'https://www.yuri-lover.win/cdn/gifs/tone.gif';
+const PK_MESSAGE = '<@466378653216014359> is a bot used by plural systems to proxy their messages as their system members!\nYou can find more on the bot [online](<https://pluralkit.me>)';
 
-// Slash command: /tone [user]
+
+// Slash command: /pk [user]
 export const slashCommand: SlashCommand = {
     data: new SlashCommandBuilder()
-        .setName('tone')
-        .setDescription('Lower someones tone')
+        .setName('pk')
+        .setDescription('Explain PluralKit')
         .addUserOption(option =>
             option
                 .setName('user')
-                .setDescription('User to lower the tone of')
+                .setDescription('The user to ping')
                 .setRequired(false)
         ),
 
@@ -26,12 +27,11 @@ export const slashCommand: SlashCommand = {
         const targetUser = interaction.options.getUser('user');
 
         if (targetUser) {
-            await interaction.reply(`${targetUser}[.](${TONE_GIF})`);
+            await interaction.reply(`Hey there, ${targetUser}! ${PK_MESSAGE}`);
         } else {
-            await interaction.reply(TONE_GIF);
+            await interaction.reply(PK_MESSAGE);
         }
     }
 };
 
-// Export all commands as an array for the command handler
 export const commands = [slashCommand];

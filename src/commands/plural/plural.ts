@@ -6,7 +6,7 @@ import {
   UserContextMenuCommandInteraction,
   MessageContextMenuCommandInteraction
 } from 'discord.js';
-import { SlashCommand, UserContextMenuCommand, MessageContextMenuCommand } from '../types/Command';
+import { SlashCommand, UserContextMenuCommand, MessageContextMenuCommand } from '../../types/Command';
 
 const PLURAL_MESSAGE = '<@1291501048493768784> is a bot used by plural systems to proxy their messages as their system members!\nYou can find more on the bot [online](<https://plural.gg>)';
 

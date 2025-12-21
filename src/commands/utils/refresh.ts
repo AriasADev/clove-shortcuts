@@ -6,7 +6,7 @@ import {
     UserContextMenuCommandInteraction,
     MessageContextMenuCommandInteraction
 } from 'discord.js';
-import { SlashCommand, UserContextMenuCommand, MessageContextMenuCommand } from '../types/Command';
+import { SlashCommand, UserContextMenuCommand, MessageContextMenuCommand } from '../../types/Command';
 
 const REFRESH_MESSAGE = 'To refresh your client to fix bugs or reload commands, use:\nControl + R on Windows and Linux\nCommand(⌘) + R on Mac\nSwipe clear and reopen on Mobile';
 

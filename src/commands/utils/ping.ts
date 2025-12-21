@@ -2,7 +2,7 @@ import {
     ChatInputCommandInteraction,
     SlashCommandBuilder
 } from 'discord.js';
-import { SlashCommand } from '../types/Command';
+import { SlashCommand } from '../../types/Command';
 
 // Slash command: /ping
 export const slashCommand: SlashCommand = {

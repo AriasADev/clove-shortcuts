@@ -2,15 +2,15 @@ import {
     ChatInputCommandInteraction,
     SlashCommandBuilder
 } from 'discord.js';
-import { SlashCommand } from '../types/Command';
+import { SlashCommand } from '../../types/Command';
 
-const CRAZY_MESSAGE = 'Crazy?...\nI was crazy once...\nThey locked me in a room...\nA rubber room\nA rubber room of rats...\nAnd rats make me crazy...';
+const GAYZY_MESSAGE = 'Gay?...\nI was gay once...\nThey locked me in a room...\nA rubber room\nA rubber room of cats...\nAnd cats make me gay...';
 
-// Slash command: /crazy [user]
+// Slash command: /gayzy [user]
 export const slashCommand: SlashCommand = {
     data: new SlashCommandBuilder()
-        .setName('crazy')
-        .setDescription('I was crazy once')
+        .setName('gayzy')
+        .setDescription('I was gay once')
         .addUserOption(option =>
             option
                 .setName('user')
@@ -22,9 +22,9 @@ export const slashCommand: SlashCommand = {
         const targetUser = interaction.options.getUser('user');
 
         if (targetUser) {
-            await interaction.reply(`You know what ${targetUser}...\n${CRAZY_MESSAGE}`);
+            await interaction.reply(`You know what ${targetUser}...\n${GAYZY_MESSAGE}`);
         } else {
-            await interaction.reply(CRAZY_MESSAGE);
+            await interaction.reply(GAYZY_MESSAGE);
         }
     }
 };

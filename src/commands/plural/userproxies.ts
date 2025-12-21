@@ -6,19 +6,19 @@ import {
     UserContextMenuCommandInteraction,
     MessageContextMenuCommandInteraction
 } from 'discord.js';
-import { SlashCommand, UserContextMenuCommand, MessageContextMenuCommand } from '../types/Command';
+import { SlashCommand, UserContextMenuCommand, MessageContextMenuCommand } from '../../types/Command';
 
-const CHEESE_GIF = 'https://cdn.discordapp.com/attachments/1427240630798782514/1446510314018439271/image0.gif';
+const USERPROXY_MESSAGE = 'You can setup a Userproxy using this guide <https://youtu.be/spRkTssPCqg>!'
 
-// Slash command: /cheese [user]
+// Slash command: /userproxies [user]
 export const slashCommand: SlashCommand = {
     data: new SlashCommandBuilder()
-        .setName('cheese')
-        .setDescription('Send the cheese GIF!')
+        .setName('userproxies')
+        .setDescription('Send the tutorial on how to setup a userproxy')
         .addUserOption(option =>
             option
                 .setName('user')
-                .setDescription('User to cheese')
+                .setDescription('User to ping')
                 .setRequired(false)
         ),
 
@@ -26,34 +26,34 @@ export const slashCommand: SlashCommand = {
         const targetUser = interaction.options.getUser('user');
 
         if (targetUser) {
-            await interaction.reply(`${targetUser}[.](${CHEESE_GIF})`);
+            await interaction.reply(`Hey there ${targetUser}! ${USERPROXY_MESSAGE}`);
         } else {
-            await interaction.reply(CHEESE_GIF);
+            await interaction.reply(USERPROXY_MESSAGE);
         }
     }
 };
 
-// User context menu: Right-click user → Apps → Cheese
+// User context menu: Right-click user → Apps → Userproxies
 export const userContextCommand: UserContextMenuCommand = {
     data: new ContextMenuCommandBuilder()
-        .setName('Cheese')
+        .setName('Userproxies')
         .setType(ApplicationCommandType.User),
 
     async execute(interaction: UserContextMenuCommandInteraction) {
         const targetUser = interaction.targetUser;
-        await interaction.reply(`${targetUser} [.](${CHEESE_GIF})`);
+        await interaction.reply(`Hey there, ${targetUser}! ${USERPROXY_MESSAGE}`);
     }
 };
 
-// Message context menu: Right-click message → Apps → Cheese
+// Message context menu: Right-click message → Apps → Userproxies
 export const messageContextCommand: MessageContextMenuCommand = {
     data: new ContextMenuCommandBuilder()
-        .setName('Cheese')
+        .setName('Userproxies')
         .setType(ApplicationCommandType.Message),
 
     async execute(interaction: MessageContextMenuCommandInteraction) {
         const targetUser = interaction.targetMessage.author;
-        await interaction.reply(`${targetUser} [.](${CHEESE_GIF})`);
+        await interaction.reply(`Hey there, ${targetUser}! ${USERPROXY_MESSAGE}`);
     }
 };
 
