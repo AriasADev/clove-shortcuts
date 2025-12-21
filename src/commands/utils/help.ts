@@ -22,7 +22,10 @@ const categories: CommandCategory[] = [
         name: 'Doughmination',
         emoji: '🍩',
         commands: [
-            { name: '/dough health', description: 'Check API connection' }
+            { name: '/dough add', description: 'Add a member to the front (autocomplete search)' },
+            { name: '/dough remove', description: 'Remove a member from the front (autocomplete search)' },
+            { name: '/dough health', description: 'Check API connection status' },
+            { name: '/dough lockout', description: '🚨 EMERGENCY: Regenerate bot token' }
         ]
     },
     {
