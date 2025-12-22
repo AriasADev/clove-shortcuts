@@ -1,6 +1,7 @@
 import { Events, Interaction, AutocompleteInteraction } from 'discord.js';
 import { loadCommands } from '../handlers/commandHandler';
 import { doughAPI } from '../utils/doughAPI';
+import { isAuthorized, sendUnauthorizedResponse } from '../middleware/authorization';
 
 export const name = Events.InteractionCreate;
 export const once = false;
@@ -13,6 +14,15 @@ loadCommands().then(loaded => {
 });
 
 export async function execute(interaction: Interaction) {
+    // Check authorization first for all interactions
+    if (!isAuthorized(interaction)) {
+        const commandName = interaction.isChatInputCommand() || interaction.isAutocomplete() 
+            ? interaction.commandName 
+            : undefined;
+        await sendUnauthorizedResponse(interaction, commandName);
+        return;
+    }
+
     // Handle autocomplete interactions
     if (interaction.isAutocomplete()) {
         await handleAutocomplete(interaction);
