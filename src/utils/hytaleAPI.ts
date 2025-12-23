@@ -124,12 +124,21 @@ class HytaleAPIClient {
             this.cookieJar.parseCookies(setCookieHeaders);
             console.log('[Hytale] Stored', setCookieHeaders.length, 'cookies from init');
 
-            const csrfToken = this.cookieJar.getCookie('csrf_token');
+            // Find CSRF token cookie (it has a hash suffix like csrf_token_xxxxx)
+            let csrfToken: string | null = null;
+            for (const [cookieName, cookie] of this.cookieJar['cookies'].entries()) {
+                if (cookieName.startsWith('csrf_token')) {
+                    csrfToken = cookie.value;
+                    console.log('[Hytale] Found CSRF token cookie:', cookieName);
+                    break;
+                }
+            }
+
             if (!csrfToken) {
                 console.error('[Hytale] CSRF token not found! Available cookies:', Array.from(this.cookieJar['cookies'].keys()));
                 throw new Error('Could not find CSRF token cookie');
             }
-            console.log('[Hytale] CSRF token found');
+            console.log('[Hytale] CSRF token extracted');
 
             console.log('[Hytale] Submitting login credentials...');
 
