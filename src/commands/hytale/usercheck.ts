@@ -4,9 +4,7 @@ import {
     EmbedBuilder,
     MessageFlags
 } from 'discord.js';
-import axios from 'axios';
-
-const HYTALE_API_URL = 'https://accounts.hytale.com/api/account/username-reservations/availability';
+import { hytaleAPI } from '../../utils/hytaleAPI';
 
 export default {
     data: new SlashCommandSubcommandBuilder()
@@ -50,27 +48,22 @@ export default {
         }
 
         try {
-            const response = await axios.get(HYTALE_API_URL, {
-                params: { username },
-                validateStatus: (status) => status === 200 || status === 400 // Accept both as valid responses
-            });
+            // Check username availability using authenticated Hytale API
+            const available = await hytaleAPI.checkUsername(username);
 
-            const isAvailable = response.status === 400; // 400 = not taken (available)
-            const isTaken = response.status === 200;     // 200 = taken
-
-            if (isAvailable) {
+            if (available) {
                 const availableEmbed = new EmbedBuilder()
                     .setColor(0x57F287) // Green
                     .setTitle('✅ Username Available')
                     .setDescription(`The username **${username}** is available!`)
                     .addFields({
                         name: 'Next Steps',
-                        value: 'You can reserve this username on [Hytale.com](https://hytale.com).'
+                        value: 'You can reserve this username on [Hytale.com](https://hytale.com) when username reservations are open.'
                     })
                     .setTimestamp();
 
                 await interaction.editReply({ embeds: [availableEmbed] });
-            } else if (isTaken) {
+            } else {
                 const takenEmbed = new EmbedBuilder()
                     .setColor(0xED4245) // Red
                     .setTitle('❌ Username Taken')
@@ -86,22 +79,23 @@ export default {
 
         } catch (error) {
             let errorMessage = 'Unknown error occurred';
+            let errorTitle = '❌ Error Checking Username';
             
-            if (axios.isAxiosError(error)) {
-                if (error.response?.status === 429) {
-                    errorMessage = 'Rate limited by Hytale API. Please try again later.';
-                } else if (error.response?.status === 500) {
-                    errorMessage = 'Hytale API is currently unavailable. Please try again later.';
-                } else if (error.code === 'ECONNABORTED' || error.code === 'ETIMEDOUT') {
-                    errorMessage = 'Request timed out. Hytale API might be slow or unavailable.';
+            if (error instanceof Error) {
+                if (error.message.includes('HYTALE_EMAIL') || error.message.includes('HYTALE_PASSWORD')) {
+                    errorTitle = '❌ Configuration Error';
+                    errorMessage = 'Hytale API credentials not configured.\n\n**Setup Required:**\nAdd to `.env` file:\n```\nHYTALE_EMAIL=your_email\nHYTALE_PASSWORD=your_password\n```';
+                } else if (error.message.includes('Login failed')) {
+                    errorTitle = '❌ Authentication Failed';
+                    errorMessage = 'Could not log in to Hytale. Please check your credentials in the `.env` file.';
                 } else {
-                    errorMessage = `API Error: ${error.response?.status || error.message}`;
+                    errorMessage = error.message;
                 }
             }
 
             const errorEmbed = new EmbedBuilder()
                 .setColor(0xED4245) // Red
-                .setTitle('❌ Error Checking Username')
+                .setTitle(errorTitle)
                 .setDescription(errorMessage)
                 .setTimestamp();
 
