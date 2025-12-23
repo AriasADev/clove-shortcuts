@@ -79,66 +79,113 @@ class HytaleAPIClient {
     }
 
     private async login(): Promise<void> {
-        console.log('[Hytale] Initializing login flow...');
-        
-        // Step 1: Initialize login flow
-        const initResponse = await axios.get(
-            'https://backend.accounts.hytale.com/self-service/login/browser',
-            { maxRedirects: 0, validateStatus: (status) => status === 302 }
-        );
+        try {
+            console.log('[Hytale] Initializing login flow...');
+            
+            // Step 1: Initialize login flow
+            const initResponse = await axios.get(
+                'https://backend.accounts.hytale.com/self-service/login/browser',
+                { maxRedirects: 0, validateStatus: (status) => status === 302 || status === 303 }
+            );
 
-        const location = initResponse.headers.location;
-        const flowMatch = location?.match(/flow=([a-f0-9-]+)/);
-        if (!flowMatch) {
-            throw new Error('Could not extract flow ID from Hytale login');
-        }
-        const flowId = flowMatch[1];
-
-        // Store cookies from init
-        const setCookieHeaders = initResponse.headers['set-cookie'] || [];
-        this.cookieJar.parseCookies(setCookieHeaders);
-
-        const csrfToken = this.cookieJar.getCookie('csrf_token');
-        if (!csrfToken) {
-            throw new Error('Could not find CSRF token cookie');
-        }
-
-        console.log('[Hytale] Submitting login...');
-
-        // Step 2: Submit login credentials
-        const loginResponse = await axios.post(
-            `https://backend.accounts.hytale.com/self-service/login?flow=${flowId}`,
-            new URLSearchParams({
-                csrf_token: csrfToken,
-                identifier: this.credentials.identifier,
-                password: this.credentials.password,
-                method: 'password'
-            }),
-            {
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'Cookie': this.cookieJar.getCookieString()
-                },
-                maxRedirects: 0,
-                validateStatus: (status) => status === 303
+            const location = initResponse.headers.location;
+            console.log('[Hytale] Redirect location:', location);
+            
+            const flowMatch = location?.match(/flow=([a-f0-9-]+)/);
+            if (!flowMatch) {
+                console.error('[Hytale] Failed to extract flow ID from location:', location);
+                throw new Error('Could not extract flow ID from Hytale login');
             }
-        );
+            const flowId = flowMatch[1];
+            console.log('[Hytale] Flow ID:', flowId);
 
-        // Store session cookies
-        const loginCookies = loginResponse.headers['set-cookie'] || [];
-        this.cookieJar.parseCookies(loginCookies);
+            // Store cookies from init
+            const setCookieHeaders = initResponse.headers['set-cookie'] || [];
+            this.cookieJar.parseCookies(setCookieHeaders);
+            console.log('[Hytale] Stored', setCookieHeaders.length, 'cookies from init');
 
-        const redirectLocation = loginResponse.headers.location;
-        if (!redirectLocation?.includes('/settings')) {
-            throw new Error('Login failed - unexpected redirect');
+            const csrfToken = this.cookieJar.getCookie('csrf_token');
+            if (!csrfToken) {
+                console.error('[Hytale] CSRF token not found! Available cookies:', Array.from(this.cookieJar['cookies'].keys()));
+                throw new Error('Could not find CSRF token cookie');
+            }
+            console.log('[Hytale] CSRF token found');
+
+            console.log('[Hytale] Submitting login credentials...');
+
+            // Step 2: Submit login credentials
+            const loginResponse = await axios.post(
+                `https://backend.accounts.hytale.com/self-service/login?flow=${flowId}`,
+                new URLSearchParams({
+                    csrf_token: csrfToken,
+                    identifier: this.credentials.identifier,
+                    password: this.credentials.password,
+                    method: 'password'
+                }),
+                {
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Cookie': this.cookieJar.getCookieString()
+                    },
+                    maxRedirects: 0,
+                    validateStatus: (status) => status >= 200 && status < 400
+                }
+            );
+
+            console.log('[Hytale] Login response status:', loginResponse.status);
+
+            // Check for error response
+            if (loginResponse.status !== 303 && loginResponse.status !== 302) {
+                console.error('[Hytale] Unexpected status code:', loginResponse.status);
+                console.error('[Hytale] Response data:', JSON.stringify(loginResponse.data).substring(0, 500));
+                throw new Error(`Login failed with status ${loginResponse.status}`);
+            }
+
+            // Store session cookies
+            const loginCookies = loginResponse.headers['set-cookie'] || [];
+            this.cookieJar.parseCookies(loginCookies);
+            console.log('[Hytale] Stored', loginCookies.length, 'session cookies');
+
+            const redirectLocation = loginResponse.headers.location;
+            console.log('[Hytale] Login redirect location:', redirectLocation);
+            
+            if (!redirectLocation) {
+                throw new Error('Login failed - no redirect location');
+            }
+
+            if (!redirectLocation.includes('/settings')) {
+                console.error('[Hytale] Unexpected redirect - might indicate login failure');
+                console.error('[Hytale] Expected /settings, got:', redirectLocation);
+                throw new Error('Login failed - invalid credentials or unexpected redirect');
+            }
+
+            // Step 3: Follow redirect to complete login
+            const finalResponse = await axios.get(redirectLocation, {
+                headers: { 'Cookie': this.cookieJar.getCookieString() },
+                maxRedirects: 5
+            });
+
+            console.log('[Hytale] Final response status:', finalResponse.status);
+
+            // Verify we have a session cookie
+            const sessionCookie = this.cookieJar.getCookie('ory_kratos_session');
+            if (!sessionCookie) {
+                console.error('[Hytale] No session cookie found after login!');
+                throw new Error('Login appeared successful but no session cookie was set');
+            }
+
+            console.log('[Hytale] Login successful! Session cookie acquired.');
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                console.error('[Hytale] Axios error during login:');
+                console.error('  Status:', error.response?.status);
+                console.error('  Message:', error.message);
+                console.error('  Response:', JSON.stringify(error.response?.data).substring(0, 500));
+                throw new Error(`Hytale login failed: ${error.message}`);
+            }
+            console.error('[Hytale] Non-axios error during login:', error);
+            throw error;
         }
-
-        // Step 3: Follow redirect to complete login
-        await axios.get(redirectLocation, {
-            headers: { 'Cookie': this.cookieJar.getCookieString() }
-        });
-
-        console.log('[Hytale] Login successful!');
     }
 
     private async ensureLoggedIn(): Promise<void> {
