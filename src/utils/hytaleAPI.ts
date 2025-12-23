@@ -69,6 +69,10 @@ class HytaleAPIClient {
         if (!this.credentials.identifier || !this.credentials.password) {
             console.warn('WARNING: HYTALE_EMAIL or HYTALE_PASSWORD not set in .env file!');
             console.warn('The Hytale username checker will not work without authentication.');
+        } else {
+            console.log('[Hytale] Credentials loaded successfully');
+            console.log('[Hytale] Email:', this.credentials.identifier);
+            console.log('[Hytale] Password length:', this.credentials.password.length);
         }
     }
 
@@ -216,15 +220,29 @@ class HytaleAPIClient {
                     
                     // Try to extract error message from the HTML
                     const errorHtml = errorResponse.data;
-                    const errorMatch = errorHtml.match(/<div[^>]*class="[^"]*error[^"]*"[^>]*>(.*?)<\/div>/is);
-                    if (errorMatch) {
-                        console.error('[Hytale] Error message:', errorMatch[1].replace(/<[^>]*>/g, '').trim());
+                    console.log('[Hytale] Error page HTML snippet:', errorHtml.substring(0, 1000));
+                    
+                    // Look for common error patterns
+                    const patterns = [
+                        /<div[^>]*class="[^"]*error[^"]*"[^>]*>(.*?)<\/div>/is,
+                        /<p[^>]*class="[^"]*error[^"]*"[^>]*>(.*?)<\/p>/is,
+                        /<span[^>]*class="[^"]*error[^"]*"[^>]*>(.*?)<\/span>/is,
+                        /error[^<]*:\s*([^<]+)</i
+                    ];
+                    
+                    for (const pattern of patterns) {
+                        const match = errorHtml.match(pattern);
+                        if (match) {
+                            const errorMsg = match[1].replace(/<[^>]*>/g, '').trim();
+                            console.error('[Hytale] Error message found:', errorMsg);
+                            break;
+                        }
                     }
                 } catch (e) {
-                    console.error('[Hytale] Could not fetch error page details');
+                    console.error('[Hytale] Could not fetch error page details:', e instanceof Error ? e.message : e);
                 }
                 
-                throw new Error('Login failed - check your HYTALE_EMAIL and HYTALE_PASSWORD in .env file. The credentials may be incorrect.');
+                throw new Error('Login failed - check your HYTALE_EMAIL and HYTALE_PASSWORD in .env file. The credentials may be incorrect, or 2FA may be enabled on your account.');
             }
 
             if (!redirectLocation.includes('/settings')) {
