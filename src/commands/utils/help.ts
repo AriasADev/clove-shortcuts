@@ -47,16 +47,9 @@ const categories: CommandCategory[] = [
             { name: '/utils ping', description: 'Check bot latency' },
             { name: '/utils refresh', description: 'How to refresh Discord client' },
             { name: '/utils help', description: 'Display this help message' },
-            { name: '/utils adb', description: 'Info about Active Developer Badge' }
-        ]
-    },
-    {
-        id: 'personal',
-        name: 'Personal',
-        emoji: '👤',
-        commands: [
-            { name: '/personal userid', description: 'Display bot owner\'s user ID' },
-            { name: '/personal invite', description: 'Server invite link' }
+            { name: '/utils adb', description: 'Info about Active Developer Badge' },
+            { name: '/utils invite', description: 'Display personal server invite link' },
+            { name: '/utils userid', description: 'Display people\'s userid' }
         ]
     },
     {
@@ -70,19 +63,11 @@ const categories: CommandCategory[] = [
         ]
     },
     {
-        id: 'games',
-        name: 'Games',
+        id: 'hytale',
+        name: 'Hytale',
         emoji: '🎮',
         commands: [
-            { name: '/games hytale', description: 'Explain Hytale' }
-        ]
-    },
-    {
-        id: 'nsfw',
-        name: 'NSFW',
-        emoji: '🔞',
-        commands: [
-            { name: '/nsfw tone', description: 'Lower someones tone'}
+            { name: '/hytale explain', description: 'Explain Hytale' }
         ]
     }
 ];

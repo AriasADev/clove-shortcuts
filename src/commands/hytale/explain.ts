@@ -7,7 +7,7 @@ const HYTALE_MESSAGE = 'Hytale is an upcoming block-based sandbox adventure RPG,
 
 export default {
     data: new SlashCommandSubcommandBuilder()
-        .setName('hytale')
+        .setName('explain')
         .setDescription('Explain Hytale')
         .addUserOption(option =>
             option
