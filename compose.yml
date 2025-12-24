@@ -11,6 +11,8 @@ services:
       - ./command-ids.json:/app/command-ids.json
   hytale-api:
     build: api
+    expose:
+      - "8070"
     container_name: hytale-api
     env_file:
       - .env

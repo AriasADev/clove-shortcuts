@@ -1,1 +1,118 @@
-{}
+{
+  "dough": {
+    "id": "1452341275255771339",
+    "name": "dough",
+    "version": "eyJuYW1l",
+    "deployed_at": "2025-12-24T05:20:01.636Z",
+    "subcommands": [
+      {
+        "id": "N/A",
+        "name": "add"
+      },
+      {
+        "id": "N/A",
+        "name": "health"
+      },
+      {
+        "id": "N/A",
+        "name": "lockout"
+      },
+      {
+        "id": "N/A",
+        "name": "remove"
+      }
+    ]
+  },
+  "fun": {
+    "id": "1452341275255771340",
+    "name": "fun",
+    "version": "eyJuYW1l",
+    "deployed_at": "2025-12-24T05:20:01.637Z",
+    "subcommands": [
+      {
+        "id": "N/A",
+        "name": "cheese"
+      },
+      {
+        "id": "N/A",
+        "name": "crazy"
+      },
+      {
+        "id": "N/A",
+        "name": "gayzy"
+      }
+    ]
+  },
+  "hytale": {
+    "id": "1452933792447860787",
+    "name": "hytale",
+    "version": "eyJuYW1l",
+    "deployed_at": "2025-12-24T05:20:01.637Z",
+    "subcommands": [
+      {
+        "id": "N/A",
+        "name": "explain"
+      },
+      {
+        "id": "N/A",
+        "name": "usercheck"
+      }
+    ]
+  },
+  "plural": {
+    "id": "1450260559990624298",
+    "name": "plural",
+    "version": "eyJuYW1l",
+    "deployed_at": "2025-12-24T05:20:01.637Z",
+    "subcommands": [
+      {
+        "id": "N/A",
+        "name": "pk"
+      },
+      {
+        "id": "N/A",
+        "name": "plural"
+      },
+      {
+        "id": "N/A",
+        "name": "plurality"
+      },
+      {
+        "id": "N/A",
+        "name": "userproxies"
+      }
+    ]
+  },
+  "utils": {
+    "id": "1452341275255771345",
+    "name": "utils",
+    "version": "eyJuYW1l",
+    "deployed_at": "2025-12-24T05:20:01.637Z",
+    "subcommands": [
+      {
+        "id": "N/A",
+        "name": "adb"
+      },
+      {
+        "id": "N/A",
+        "name": "help"
+      },
+      {
+        "id": "N/A",
+        "name": "invite"
+      },
+      {
+        "id": "N/A",
+        "name": "ping"
+      },
+      {
+        "id": "N/A",
+        "name": "refresh"
+      },
+      {
+        "id": "N/A",
+        "name": "userid"
+      }
+    ]
+  }
+}

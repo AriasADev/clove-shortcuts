@@ -19,4 +19,4 @@ RUN bun install
 COPY . .
 
 # Run your app
-CMD ["bun", "run", "start"]
+CMD ["npm", "run", "start"]
