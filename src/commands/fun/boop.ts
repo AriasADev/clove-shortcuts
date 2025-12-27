@@ -3,12 +3,12 @@ import {
     SlashCommandSubcommandBuilder
 } from 'discord.js';
 
-const russianbadger = 'https://tenor.com/view/badger-russianbadger-therussianbadger-russianbadger-your-honor-therussianbadger-your-honor-gif-17976630367246948183';
+const boop = 'https://tenor.com/en-GB/view/boop-nose-anime-gif-6287077';
 
 export default {
     data: new SlashCommandSubcommandBuilder()
-        .setName('stfu')
-        .setDescription('Your honour. You wasn\'t even there.')
+        .setName('boop')
+        .setDescription('Boop!')
         .addUserOption(option =>
             option
                 .setName('user')
@@ -20,9 +20,9 @@ export default {
         const targetUser = interaction.options.getUser('user');
 
         if (targetUser) {
-            await interaction.reply(`${targetUser}[.](${russianbadger})`);
+            await interaction.reply(`${targetUser}[.](${boop})`);
         } else {
-            await interaction.reply(russianbadger);
+            await interaction.reply(boop);
         }
     }
 };
